@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Query Data</h1>
+    <input type="text" id="phoneNumber" placeholder="Enter phone number">
+    <button id="queryButton">Query</button>
+    <div id="result"></div>
+
+    <script>
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const queryButton = document.getElementById('queryButton');
+        const resultDiv = document.getElementById('result');
+
+        queryButton.addEventListener('click', () => {
+            const phoneNumber = phoneNumberInput.value;
+            if (phoneNumber) {
+                fetch(`/query?phone_number=${phoneNumber}`)
+               .then(response => response.json())
+               .then(data => {
+                    if (data.message) {
+                        resultDiv.textContent = data.message;
+                    } else {
+                        resultDiv.innerHTML = '';
+                        data.forEach(item => {
+                            const p = document.createElement('p');
+                            p.textContent = `姓名: ${item.姓名}, 物品名称: ${item.物品名称}, 单号: ${item.单号}`;
+                            resultDiv.appendChild(p);
+                        });
+                    }
+                });
+            } else {
+                resultDiv.textContent = 'Please enter a phone number';
+            }
+        });
+    </script>
+</body>
+</html>
